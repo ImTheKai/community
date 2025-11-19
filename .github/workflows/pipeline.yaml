@@ -76,6 +76,9 @@ jobs:
             --baseURL "${{ steps.pages.outputs.base_url }}/" \
             --cacheDir "${{ runner.temp }}/hugo_cache"
 
+      - name: Build Pagefind index
+        run: npx --yes pagefind --site public --output-subdir public/pagefind --glob "blog/**/*.html"
+
       - name: Save Hugo Cache
         id: cache-save
         uses: actions/cache/save@v4
