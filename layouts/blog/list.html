@@ -5,6 +5,11 @@
     {{ end }}
 {{- end }}
 
+{{ define "head" -}}
+    <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+    <script src="/pagefind/pagefind-ui.js"></script>
+{{- end }}
+
 {{ define "mainwrapper" }}
 
 {{- $pages := .Pages -}}
@@ -27,6 +32,10 @@
 
     {{- .Content -}}
     <div class="contentblock branded">
+        <div class="blog-search-block">
+            <h2>Search the blog</h2>
+            <div id="blog-search"></div>
+        </div>
         <div class="select-container">
             <select id="categories-select" onchange="navigateToPage(this)" >
                 <option value="">Categories</option>
@@ -102,4 +111,32 @@
             }
         }
     </script> 
+    <script>
+        window.addEventListener("DOMContentLoaded", function () {
+            const mountEl = document.querySelector("#blog-search");
+            if (!mountEl) {
+                return;
+            }
+
+            const initPagefind = function () {
+                if (!window.PagefindUI) {
+                    window.setTimeout(initPagefind, 50);
+                    return;
+                }
+
+                if (mountEl.dataset.pagefindReady === "true") {
+                    return;
+                }
+
+                mountEl.dataset.pagefindReady = "true";
+                new PagefindUI({
+                    element: "#blog-search",
+                    showSubResults: true,
+                    showImages: false,
+                });
+            };
+
+            initPagefind();
+        });
+    </script>
 {{ end }}

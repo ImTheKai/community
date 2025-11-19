@@ -129,6 +129,23 @@
   }
 }
 
+.blog-search-block {
+  background: #fff;
+  border: 1px solid #e8ecf3;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+
+  h2 {
+    font-size: 24px;
+    margin: 0 0 1rem 0;
+  }
+
+  #blog-search {
+    width: 100%;
+  }
+}
+
 // Media queries for responsiveness
 @media (max-width: 768px) {
   .blog-list {
