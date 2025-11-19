@@ -173,16 +173,45 @@
                 paginator && paginator.classList.remove("is-hidden");
             };
 
-            searchInput.addEventListener("input", function (event) {
-                const query = event.target.value.trim().toLowerCase();
+            const parseQueryTokens = (rawValue) => {
+                if (!rawValue) {
+                    return [];
+                }
 
-                if (!query) {
+                const lowered = rawValue.toLowerCase();
+                const tokens = [];
+                const phraseRegex = /"([^"]+)"/g;
+                let remainder = lowered;
+
+                remainder = remainder.replace(phraseRegex, (_, phrase) => {
+                    const trimmed = phrase.trim();
+                    if (trimmed) {
+                        tokens.push(trimmed);
+                    }
+                    return " ";
+                });
+
+                remainder
+                    .split(/\s+/)
+                    .map((part) => part.trim())
+                    .filter(Boolean)
+                    .forEach((part) => tokens.push(part));
+
+                return tokens;
+            };
+
+            searchInput.addEventListener("input", function (event) {
+                const tokens = parseQueryTokens(event.target.value.trim());
+
+                if (!tokens.length) {
                     resetList();
                     return;
                 }
 
                 paginator && paginator.classList.add("is-hidden");
-                const matches = postsData.filter((post) => post.searchText.includes(query));
+                const matches = postsData.filter((post) =>
+                    tokens.some((token) => post.searchText.includes(token))
+                );
                 renderMatches(matches);
             });
         });
